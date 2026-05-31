@@ -1,0 +1,21 @@
+# Maven compiled output
+target/
+*.jar
+*.war
+*.ear
+
+# VS Code internal workspace tracking
+.vscode/
+.workspace/
+*.code-workspace
+
+# Eclipse / IntelliJ files that might be auto-generated
+.settings/
+.project
+.classpath
+.idea/
+*.iml
+
+# OS generated files
+Thumbs.db
+.DS_Store
