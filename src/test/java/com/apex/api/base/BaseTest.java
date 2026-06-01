@@ -13,11 +13,9 @@ public class BaseTest {
         // Pull target configuration values dynamically from utility
         String targetBaseUrl = ConfigReader.getProperty("base.url");
 
-        // Feed configuration into the global REST Assured instantiation engines
-        RestAssured.baseURI = targetBaseUrl;
-
         // Define default request specifications applied globally to all API calls
         RestAssured.requestSpecification = new RequestSpecBuilder()
+                .setBaseUri(targetBaseUrl)
                 .setContentType(ContentType.JSON)
                 .addHeader("Accept", "application/json")
                 .build();
