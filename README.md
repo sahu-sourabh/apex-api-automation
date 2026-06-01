@@ -14,6 +14,7 @@ By avoiding bloated, third-party reporting frameworks and heavy threading layers
 
 ### Core Engineering Implementations:
 * **Strict Type-Safety & Data Separation:** Leveraging the Jackson Data Bind library to handle explicit POJO Serialization (`PostRequest`) and Deserialization (`PostResponse`), eliminating hardcoded JSON text blobs.
+* **Zero Hardcoding Data Isolation Strategy:** Completely externalized environmental constants (endpoints, headers) into configuration properties and decoupled functional test data/assertion messaging into a dedicated `TestData` utility layer.
 * **Stateful E2E Lifecycle Testing:** Validates a continuous HTTP CRUD flow (POST → GET → PUT → DELETE) by dynamically cascading server-generated runtime entities across tests via TestNG execution dependencies.
 * **Externalized Configuration Management:** Completely decouples environment properties (URLs, timeouts) from the core testing logic via a clean `ConfigReader` engine.
 * **Decoupled Aspect Logging:** Integrates a global `ITestListener` to intercept test run states at runtime, injecting professional terminal execution markers without polluting functional test files.
