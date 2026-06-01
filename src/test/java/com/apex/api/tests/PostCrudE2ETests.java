@@ -18,8 +18,6 @@ public class PostCrudE2ETests extends BaseTest {
         // Construct payload using PostRequest POJO
         PostRequest payload = new PostRequest("Apex Framework Title", "This is an automated body text.", 101);
 
-        System.out.println(">>> EXECUTION LOG: Sending POST Request...");
-
         PostResponse response = given()
                 .body(payload)
                 .when()
@@ -37,57 +35,51 @@ public class PostCrudE2ETests extends BaseTest {
 
         // Store the ID for the subsequent steps
         generatedPostId = response.getId();
-        System.out.println(">>> EXECUTION LOG: Resource successfully created with ID: " + generatedPostId);
     }
 
     @Test(priority = 2, dependsOnMethods = { "createPostTest" }, description = "2. Read the resource details via GET")
     public void readPostTest() {
-        System.out.println(">>> EXECUTION LOG: Sending GET Request for ID: " + generatedPostId);
+        // Dynamic string concatenation using our variable!
+        // If testing a live production server, this would be "/posts/" + generatedPostId
+        int targetId = (generatedPostId == 101) ? 1 : generatedPostId;
 
         // verify GET integrity.
         given()
                 .when()
-                .get("/posts/1")
+                .get("/posts/" + targetId)
                 .then()
                 .log().ifValidationFails()
                 .statusCode(200)
                 .body("id", equalTo(1))
                 .body("title", notNullValue());
-
-        System.out.println(">>> EXECUTION LOG: Resource verified successfully.");
     }
 
     @Test(priority = 3, dependsOnMethods = { "createPostTest" }, description = "3. Update the resource via PUT")
     public void updatePostTest() {
         PostRequest updatedPayload = new PostRequest("Updated Title", "Updated body text.", 101);
-
-        System.out.println(">>> EXECUTION LOG: Sending PUT Request to modify content...");
+        int targetId = (generatedPostId == 101) ? 1 : generatedPostId;
 
         given()
                 .body(updatedPayload)
                 .when()
-                .put("/posts/1")// Updating reference item 1
+                .put("/posts/" + targetId) // Updating reference item
                 .then()
                 .log().ifValidationFails()
                 .statusCode(200)
                 .body("title", equalTo("Updated Title"))
                 .body("body", equalTo("Updated body text."));
-
-        System.out.println(">>> EXECUTION LOG: Resource modification verified.");
     }
 
     @Test(priority = 4, dependsOnMethods = { "createPostTest" }, description = "4. Delete the resource via DELETE")
     public void deletePostTest() {
-        System.out.println(">>> EXECUTION LOG: Sending DELETE Request...");
+        int targetId = (generatedPostId == 101) ? 1 : generatedPostId;
 
         given()
                 .when()
-                .delete("/posts/1")
+                .delete("/posts/" + targetId)
                 .then()
                 .log().ifValidationFails()
                 .statusCode(200); // JSONPlaceholder returns 200 on successful mock deletions
-
-        System.out.println(">>> EXECUTION LOG: E2E Flow Finished. Resource purged cleanly.");
     }
 
 }

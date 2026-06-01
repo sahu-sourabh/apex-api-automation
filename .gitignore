@@ -19,3 +19,6 @@ target/
 # OS generated files
 Thumbs.db
 .DS_Store
+
+# Test execution reports
+test-output/

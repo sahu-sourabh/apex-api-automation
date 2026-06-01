@@ -1,11 +1,14 @@
 package com.apex.api.base;
 
 import com.apex.api.utils.ConfigReader;
+import com.apex.api.utils.TestListener;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
+@Listeners(TestListener.class) // Attaches custom logging globally
 public class BaseTest {
 
     @BeforeSuite
