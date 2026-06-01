@@ -15,12 +15,13 @@ public class BaseTest {
     public void globalSetup() {
         // Pull target configuration values dynamically from utility
         String targetBaseUrl = ConfigReader.getProperty("base.url");
+        String acceptHeader = ConfigReader.getProperty("header.accept"); // Dynamic Header
 
         // Define default request specifications applied globally to all API calls
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(targetBaseUrl)
                 .setContentType(ContentType.JSON)
-                .addHeader("Accept", "application/json")
+                .addHeader("Accept", acceptHeader)
                 .build();
     }
 }
