@@ -1,5 +1,7 @@
 # Apex API Automation Framework
 
+[![API Regression Suite](https://github.com/sahu-sourabh/apex-api-automation/actions/workflows/maven.yml/badge.svg)](https://github.com/sahu-sourabh/apex-api-automation/actions/workflows/maven.yml)
+
 ![Java](https://img.shields.io/badge/Java-25-orange?style=for-the-badge&logo=java)
 ![Maven](https://img.shields.io/badge/Maven-3.6+-blue?style=for-the-badge&logo=apache-maven)
 ![TestNG](https://img.shields.io/badge/TestNG-7.10-red?style=for-the-badge&logo=testng)
@@ -9,8 +11,8 @@ An enterprise-grade API Automation Testing Framework designed with clean archite
 ---
 
 ## 📌 Project Status
-**Current Phase:** `Phase 1: Core Architecture Completed`  
-**Status:** 🟡 **In Active Development / Progress**
+**Current Phase:** `Phase 4: CI/CD Pipeline Integration Completed`  
+**Status:** 🟢 **Production Ready / Fully Functional**
 
 ---
 
@@ -26,16 +28,16 @@ An enterprise-grade API Automation Testing Framework designed with clean archite
 ## 🗺️ Future Roadmap & Upcoming Phases
 
 ### Phase 2: Advanced Data Serialization & Payload Management
-* [ ] Integrate **Jackson Databind** engines to completely replace brittle hardcoded JSON request body strings.
-* [ ] Design decoupled **POJOs (Plain Old Java Objects)** mapping data blueprints inside an isolated `models` layer.
+* [x] Integrate **Jackson Databind** engines to completely replace brittle hardcoded JSON request body strings.
+* [x] Design decoupled **POJOs (Plain Old Java Objects)** mapping data blueprints inside an isolated `models` layer.
 
 ### Phase 3: Commercial-Grade Reporting & Logging
-* [ ] Integrate **ExtentReports** or **Allure** to auto-generate beautiful HTML dashboards visualizing historical execution runs.
-* [ ] Implement advanced runtime filters utilizing REST Assured custom validation log filters.
+* [x] Integrate **ExtentReports** or **Allure** to auto-generate beautiful HTML dashboards visualizing historical execution runs.
+* [x] Implement advanced runtime filters utilizing REST Assured custom validation log filters.
 
 ### Phase 4: CI/CD Integration & Infrastructure Verification
-* [ ] Author local system setup instructions for global system environment runtime paths.
-* [ ] Build a robust **GitHub Actions Workflow** (`.github/workflows/`) pipeline to trigger full regression suites automatically upon every repository code commit or pull request.
+* [x] Author local system setup instructions for global system environment runtime paths.
+* [x] Build a robust **GitHub Actions Workflow** (`.github/workflows/`) pipeline to trigger full regression suites automatically upon every repository code commit or pull request.
 
 ---
 
@@ -45,4 +47,4 @@ An enterprise-grade API Automation Testing Framework designed with clean archite
 * **Build Engine:** Maven 3.6+
 * **IDE Recommend:** Visual Studio Code (with *Extension Pack for Java*)
 
-To execute tests via the internal VS Code test runner framework, open this root directory as a standalone project workspace folder, wait for Maven dependencies to complete indexing, and tap the test play triggers embedded in the `HttpBinTests.java` file.
+To execute tests via the internal VS Code test runner framework, open this root directory as a standalone project workspace folder, wait for Maven dependencies to complete indexing, and tap the test play triggers embedded in the `PostCrudE2ETests.java` file.
