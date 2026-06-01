@@ -49,6 +49,7 @@ By avoiding bloated, third-party reporting frameworks and heavy threading layers
 │       │   │   └── PostCrudE2ETests.java # Dynamic E2E Validation Engine
 │       │   └── utils/
 │       │       ├── ConfigReader.java    # Safe Properties Processor
+│       │       ├── TestData.java        # Test data management layer
 │       │       └── TestListener.java    # Intercepting Terminal Logger
 │       └── resources/
 │           └── config.properties        # Environment Global Settings
