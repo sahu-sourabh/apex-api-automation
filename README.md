@@ -1,50 +1,74 @@
-# Apex API Automation Framework
+# Apex API Automation Framework (Core Architecture MVP)
 
 [![API Regression Suite](https://github.com/sahu-sourabh/apex-api-automation/actions/workflows/maven.yml/badge.svg)](https://github.com/sahu-sourabh/apex-api-automation/actions/workflows/maven.yml)
 
-![Java](https://img.shields.io/badge/Java-25-orange?style=for-the-badge&logo=java)
-![Maven](https://img.shields.io/badge/Maven-3.6+-blue?style=for-the-badge&logo=apache-maven)
-![TestNG](https://img.shields.io/badge/TestNG-7.10-red?style=for-the-badge&logo=testng)
-
-An enterprise-grade API Automation Testing Framework designed with clean architecture principles, utilizing Java, REST Assured, and TestNG. This repository serves as a professional-grade portfolio asset demonstrating modular test design patterns.
+An enterprise-grade, lightweight REST API automation blueprint engineered with Java, REST Assured, and TestNG. This framework is architected as a production-ready MVP, establishing a highly scalable, single-threaded boilerplate foundation that can be instantly expanded to fit complex microservice ecosystems.
 
 ---
 
-## 📌 Project Status
-**Current Phase:** `Phase 4: CI/CD Pipeline Integration Completed`  
-**Status:** 🟢 **Production Ready / Fully Functional**
+## 🏛️ Architectural Strategy & MVP Focus
+
+This repository serves as a functional architectural blueprint rather than an exhaustive test-case dump. The framework focuses entirely on a pristine, zero-leak end-to-end user state lifecycle. 
+
+By avoiding bloated, third-party reporting frameworks and heavy threading layers out of the box, this boilerplate maximizes execution speed and limits runtime complexity, delivering a deterministic testing environment.
+
+### Core Engineering Implementations:
+* **Strict Type-Safety & Data Separation:** Leveraging the Jackson Data Bind library to handle explicit POJO Serialization (`PostRequest`) and Deserialization (`PostResponse`), eliminating hardcoded JSON text blobs.
+* **Stateful E2E Lifecycle Testing:** Validates a continuous HTTP CRUD flow (POST → GET → PUT → DELETE) by dynamically cascading server-generated runtime entities across tests via TestNG execution dependencies.
+* **Externalized Configuration Management:** Completely decouples environment properties (URLs, timeouts) from the core testing logic via a clean `ConfigReader` engine.
+* **Decoupled Aspect Logging:** Integrates a global `ITestListener` to intercept test run states at runtime, injecting professional terminal execution markers without polluting functional test files.
 
 ---
 
-## 🚀 Key Achievements & Current Implementations
+## 🛠️ Technology Stack
 
-* **Environment Separation:** Implemented a dynamic `.properties` configuration management system to quickly switch target base environments without altering underlying Java code.
-* **Global Configuration Hub:** Developed a base engine (`BaseTest`) utilizing TestNG lifecycle hooks (`@BeforeSuite`) to universally apply global Request Specifications (e.g., Default Content-Types, Request Headers).
-* **Robust Core Routing:** Configured structural package-level separation across test layers (`base`, `utils`, `tests`) ensuring strict adherence to the **Single Responsibility Principle (SRP)**.
-* **Clean Version Control:** Maintained a clean, production-ready commit history, tracking only operational code assets via advanced `.gitignore` sanitization blocks.
-
----
-
-## 🗺️ Future Roadmap & Upcoming Phases
-
-### Phase 2: Advanced Data Serialization & Payload Management
-* [x] Integrate **Jackson Databind** engines to completely replace brittle hardcoded JSON request body strings.
-* [x] Design decoupled **POJOs (Plain Old Java Objects)** mapping data blueprints inside an isolated `models` layer.
-
-### Phase 3: Commercial-Grade Reporting & Logging
-* [x] Integrate **ExtentReports** or **Allure** to auto-generate beautiful HTML dashboards visualizing historical execution runs.
-* [x] Implement advanced runtime filters utilizing REST Assured custom validation log filters.
-
-### Phase 4: CI/CD Integration & Infrastructure Verification
-* [x] Author local system setup instructions for global system environment runtime paths.
-* [x] Build a robust **GitHub Actions Workflow** (`.github/workflows/`) pipeline to trigger full regression suites automatically upon every repository code commit or pull request.
+* **Language:** Java 25 (JDK)
+* **API Client:** REST Assured (v5.x)
+* **Test Engine:** TestNG
+* **JSON Parser:** Jackson Data Bind
+* **Build Tool:** Apache Maven
+* **CI/CD Platform:** GitHub Actions
 
 ---
 
-## 🛠️ Local Setup & Prerequisites
+## 📁 Repository Structure
 
-* **JDK Target:** Java 25
-* **Build Engine:** Maven 3.6+
-* **IDE Recommend:** Visual Studio Code (with *Extension Pack for Java*)
+```text
+├── .github/workflows/
+│   └── maven.yml          # GitHub Actions Cloud CI Pipeline
+├── src/
+│   └── test/
+│       ├── java/com/apex/api/
+│       │   ├── base/
+│       │   │   └── BaseTest.java        # Global specifications & hooks
+│       │   ├── models/
+│       │   │   ├── PostRequest.java     # Serialization POJO Model
+│       │   │   └── PostResponse.java    # Deserialization POJO Model
+│       │   ├── tests/
+│       │   │   └── PostCrudE2ETests.java # Dynamic E2E Validation Engine
+│       │   └── utils/
+│       │       ├── ConfigReader.java    # Safe Properties Processor
+│       │       └── TestListener.java    # Intercepting Terminal Logger
+│       └── resources/
+│           └── config.properties        # Environment Global Settings
+└── pom.xml                              # Maven Project Object Model
+```
 
-To execute tests via the internal VS Code test runner framework, open this root directory as a standalone project workspace folder, wait for Maven dependencies to complete indexing, and tap the test play triggers embedded in the `PostCrudE2ETests.java` file.
+## 🚀 Execution & Continuous Integration
+### Local Execution
+To clean your project workspace, compile the classes, and execute the complete regression suite locally via the terminal, run:
+- mvn clean test
+
+All HTML execution matrices and XML configurations will be generated directly into the standard `target/surefire-reports/` path.
+
+### Cloud CI/CD Pipeline
+This framework features native Continuous Integration. Every repository `push` or `pull_request` targeting the `main` branch automatically triggers a headless Linux container inside GitHub Actions.
+
+The pipeline handles:
+
+1. Virtual OS Provisioning (`ubuntu-latest`)
+2. Java Development Kit setup (`Temurin JDK 25`)
+3. Automated Maven Dependency compilation and Test execution
+4. Automated Build Artifact packaging, extracting and preserving the HTML testing reports directly into the GitHub build dashboard summary.
+
+---
