@@ -1,89 +1,144 @@
 package com.apex.api.tests;
 
 import com.apex.api.base.BaseTest;
-import com.apex.api.models.PostRequest;
-import com.apex.api.models.PostResponse;
-import com.apex.api.utils.ConfigReader;
+import com.apex.api.models.article.PostArticleRequest;
+import com.apex.api.models.article.PostArticleResponse;
+import com.apex.api.models.article.RequestArticle;
+import com.apex.api.models.user.PostUserRequest;
+import com.apex.api.models.user.PostUserResponse;
+import com.apex.api.models.user.RequestUser;
 import com.apex.api.utils.TestData;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 import org.testng.Assert;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class PostCrudE2ETests extends BaseTest {
+        LocalDateTime currenDateTime = LocalDateTime.now();
+        private String token;
+        private String slug;
+        private String username = "java_user" + currenDateTime;
+        private String email = "java_user" + currenDateTime + "@enterprise.com";
+        private String password = "NoLombok123";
 
-    // Class-level variable to store the dynamic ID generated during the POST step
-    private int generatedPostId;
-    // Read endpoint path dynamically from config
-    private final String postsRoute = ConfigReader.getProperty("endpoint.posts");
+        @Test(priority = 1, description = "1. Create a new user via POST and extract token")
+        public void generateTokenTest() {
+                // Arrange
+                PostUserRequest payload = new PostUserRequest()
+                                .setuser(
+                                                new RequestUser()
+                                                                .setUsername(username)
+                                                                .setEmail(email)
+                                                                .setPassword(password));
 
-    @Test(priority = 1, description = "1. Create a new resource via POST and serialize payload")
-    public void createPostTest() {
-        // Construct payload using PostRequest POJO, Data populated completely from TestData layer
-        PostRequest payload = new PostRequest(TestData.POST_TITLE, TestData.POST_BODY, TestData.POST_USER_ID);
+                // Act
+                PostUserResponse response = given()
+                                .body(payload)
+                                .when()
+                                .post("/api/users")
+                                .then()
+                                .log().ifValidationFails()
+                                .statusCode(TestData.TWO_HUNDRED_ONE)// HTTP 201 means Created
+                                .extract()
+                                .as(PostUserResponse.class); // Deserializes JSON response directly into Java Object
 
-        PostResponse response = given()
-                .body(payload)
-                .when()
-                .post(postsRoute) // Dynamic Route
-                .then()
-                .log().ifValidationFails()
-                .statusCode(TestData.TWO_HUNDRED_ONE)// HTTP 201 means Created
-                .extract()
-                .as(PostResponse.class); // Deserializes JSON response directly into Java Object
+                // Assert
+                // Store the Token for the subsequent steps
+                token = response.getUser().getToken();
+                Assert.assertNotNull(token, "Token Null");
+        }
 
-        // Verify the response body data matches what was sent, Standardized dynamic assertions
-        Assert.assertEquals(response.getTitle(), payload.getTitle(), TestData.ERR_TITLE_MISMATCH);
-        Assert.assertEquals(response.getBody(), payload.getBody(), TestData.ERR_BODY_MISMATCH);
-        Assert.assertNotNull(response.getId(), TestData.ERR_ID_NULL);
+        @Test(priority = 2, dependsOnMethods = {
+                        "generateTokenTest" }, description = "2. Create a new article via POST")
+        public void createArticleTest() {
+                // Arrange
+                PostArticleRequest payload = new PostArticleRequest()
+                                .setArticle(
+                                                new RequestArticle()
+                                                                .setTitle("Rest Assured Article")
+                                                                .setDescription("Testing via Rest Assured")
+                                                                .setBody("This article was generated instantly via a backend POST API request.")
+                                                                .setTagList(List.of("Java", "Rest Assured")));
 
-        // Store the ID for the subsequent steps
-        generatedPostId = response.getId();
-    }
+                // Act
+                PostArticleResponse response = given()
+                                .header("Authorization", "Token " + token)
+                                .body(payload)
+                                .when()
+                                .post("/api/articles")
+                                .then()
+                                .log().ifValidationFails()
+                                .statusCode(TestData.TWO_HUNDRED_ONE)// HTTP 201 means Created
+                                .extract()
+                                .as(PostArticleResponse.class); // Deserializes JSON response directly into Java Object
 
-    @Test(priority = 2, dependsOnMethods = { "createPostTest" }, description = "2. Read the resource details via GET")
-    public void readPostTest() {
-        // Dynamic string concatenation using variable!
-        // If testing a live production server, this would be "/posts/" + generatedPostId
-        int targetId = (generatedPostId == TestData.POST_USER_ID) ? TestData.ONE : generatedPostId;
+                // Asset
+                // Store the slug for the subsequent steps
+                slug = response.getArticle().getSlug();
+                Assert.assertNotNull(slug, "Post Slug Empty");
+        }
 
-        // verify GET integrity.
-        given()
-                .when()
-                .get(postsRoute + "/" + targetId) // Dynamic routing concatenation
-                .then()
-                .log().ifValidationFails()
-                .statusCode(TestData.TWO_HUNDRED)
-                .body(TestData.ID, equalTo(TestData.ONE))
-                .body(TestData.TITLE, notNullValue());
-    }
+        @Test(priority = 3, dependsOnMethods = {
+                        "createArticleTest" }, description = "3. Read the article details via GET")
+        public void readArticleTest() {
 
-    @Test(priority = 3, dependsOnMethods = { "createPostTest" }, description = "3. Update the resource via PUT")
-    public void updatePostTest() {
-        PostRequest updatedPayload = new PostRequest(TestData.UPDATE_TITLE, TestData.UPDATE_BODY, TestData.POST_USER_ID);
-        int targetId = (generatedPostId == TestData.POST_USER_ID) ? TestData.ONE : generatedPostId;
+                // verify GET integrity.
+                PostArticleResponse response = given()
+                                .header("Authorization", "Token " + token)
+                                .when()
+                                .get("/api/articles/" + slug) // Dynamic routing concatenation
+                                .then()
+                                .log().ifValidationFails()
+                                .statusCode(TestData.TWO_HUNDRED)
+                                .extract()
+                                .as(PostArticleResponse.class);
 
-        given()
-                .body(updatedPayload)
-                .when()
-                .put(postsRoute + "/" + targetId) // Updating reference item
-                .then()
-                .log().ifValidationFails()
-                .statusCode(TestData.TWO_HUNDRED)
-                .body(TestData.TITLE, equalTo(TestData.UPDATE_TITLE))
-                .body(TestData.BODY, equalTo(TestData.UPDATE_BODY));
-    }
+                // Assert
+                Assert.assertEquals(response.getArticle().getSlug(), slug, "Get Slug Mismatch");
+        }
 
-    @Test(priority = 4, dependsOnMethods = { "createPostTest" }, description = "4. Delete the resource via DELETE")
-    public void deletePostTest() {
-        int targetId = (generatedPostId == TestData.POST_USER_ID) ? TestData.ONE : generatedPostId;
+        @Test(priority = 4, dependsOnMethods = { "createArticleTest" }, description = "4. Update the article via PUT")
+        public void updateArticleTest() {
+                // Arrange
+                PostArticleRequest updatedPayload = new PostArticleRequest()
+                                .setArticle(
+                                                new RequestArticle()
+                                                                .setTitle("Updated Article")
+                                                                .setDescription("Updated Testing")
+                                                                .setBody("This article was updated instantly via a backend PUT API request.")
+                                                                .setTagList(List.of("Java", "Rest Assured",
+                                                                                "Selenium")));
 
-        given()
-                .when()
-                .delete(postsRoute + "/" + targetId)
-                .then()
-                .log().ifValidationFails()
-                .statusCode(TestData.TWO_HUNDRED); // JSONPlaceholder returns 200 on successful mock deletions
-    }
+                // Act
+                PostArticleResponse response = given()
+                                .header("Authorization", "Token " + token)
+                                .body(updatedPayload)
+                                .when()
+                                .put("/api/articles/" + slug) // Updating reference item
+                                .then()
+                                .log().ifValidationFails()
+                                .statusCode(TestData.TWO_HUNDRED)
+                                .extract()
+                                .as(PostArticleResponse.class);
+
+                slug = response.getArticle().getSlug();
+                // Assert
+                Assert.assertNotNull(slug, "Put Slug Empty");
+        }
+
+        @Test(priority = 5, dependsOnMethods = {
+                        "createArticleTest" }, description = "5. Delete the article via DELETE")
+        public void deleteArticleTest() {
+
+                given()
+                                .header("Authorization", "Token " + token)
+                                .when()
+                                .delete("/api/articles/" + slug)
+                                .then()
+                                .log().ifValidationFails()
+                                .statusCode(204);
+        }
 
 }
