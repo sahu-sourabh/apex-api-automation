@@ -6,17 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class PostUserResponse {
     private ResponseUser user;
 
-    // Required No-Args Constructor
-    public PostUserResponse() {
-    }
+    public PostUserResponse() {}
 
-    // Fluent Setter
     public PostUserResponse setUser(ResponseUser user) {
         this.user = user;
         return this;
     }
 
-    // Getter
     public ResponseUser getUser() {
         return user;
     }

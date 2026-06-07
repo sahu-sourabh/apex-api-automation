@@ -1,17 +1,16 @@
 package com.apex.api.models.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseAuthor {
-    String username;
-    String bio;
-    String image;
-    Boolean following;
+    private String username;
+    private String bio;
+    private String image;
+    private Boolean following;
 
-    // Required No-Args Constructor
-    public ResponseAuthor() {
+    public ResponseAuthor() {}
 
-    }
-
-    // Fluent Setters
     public ResponseAuthor setUsername(String username) {
         this.username = username;
         return this;
@@ -32,7 +31,6 @@ public class ResponseAuthor {
         return this;
     }
 
-    // Getters
     public String getUsername() {
         return username;
     }

@@ -1,18 +1,18 @@
 package com.apex.api.models.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PostArticleResponse {
-    ResponseArticle article;
+    private ResponseArticle article;
     
-    // Required No-Args Constructor
     public PostArticleResponse() {}
 
-    // Fluent Setter
     public PostArticleResponse setArticle(ResponseArticle article){
         this.article = article;
         return this;
     }
 
-    // Getter
     public ResponseArticle getArticle() {
         return article;
     }

@@ -16,15 +16,24 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
+        // Safe, native execution runtime metric capture
+        long duration = result.getEndMillis() - result.getStartMillis();
+        if (duration <= 0) {
+            // Fallback calculation mechanism if TestNG lifecycle hasn't flushed metrics yet
+            duration = System.currentTimeMillis() - result.getStartMillis();
+        }
+
         System.out.println("✅ TEST PASSED:  " + result.getMethod().getMethodName());
-        System.out.println("⏱️  Duration:   " + (result.getEndMillis() - result.getStartMillis()) + " ms");
+        System.out.println("⏱️  Duration:    " + duration + " ms");
         System.out.println("==========================================================================\n");
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
         System.err.println("❌ TEST FAILED:  " + result.getMethod().getMethodName());
-        System.err.println("🚨 Error Cause:  " + result.getThrowable().getMessage());
+        if (result.getThrowable() != null) {
+            System.err.println("🚨 Error Cause:  " + result.getThrowable().getMessage());
+        }
         System.err.println("==========================================================================\n");
     }
 

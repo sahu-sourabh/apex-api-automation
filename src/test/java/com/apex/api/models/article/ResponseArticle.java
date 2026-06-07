@@ -1,24 +1,23 @@
 package com.apex.api.models.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseArticle {
-    String slug;
-    String title;
-    String description;
-    String body;
-    List<String> tagList;
-    String createdAt;
-    String updatedAt;
-    Boolean favorited;
-    Integer favoritesCount;
-    ResponseAuthor author;
+    private String slug;
+    private String title;
+    private String description;
+    private String body;
+    private List<String> tagList;
+    private String createdAt;
+    private String updatedAt;
+    private Boolean favorited;
+    private Integer favoritesCount;
+    private ResponseAuthor author;
 
-    // Required No-Args Constructor
-    public ResponseArticle() {
-    }
+    public ResponseArticle() {}
 
-    // Fluent Setters
     public ResponseArticle setSlug(String slug) {
         this.slug = slug;
         return this;
@@ -69,7 +68,6 @@ public class ResponseArticle {
         return this;
     }
 
-    // Setters
     public String getSlug() {
         return slug;
     }
@@ -109,5 +107,4 @@ public class ResponseArticle {
     public ResponseAuthor getAuthor() {
         return author;
     }
-
 }

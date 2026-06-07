@@ -5,11 +5,8 @@ public class RequestUser {
     private String email;
     private String password;
 
-    // Required No-Args Constructor
-    public RequestUser() {
-    }
+    public RequestUser() {}
 
-    // Fluent Setters
     public RequestUser setUsername(String username) {
         this.username = username;
         return this;
@@ -25,7 +22,6 @@ public class RequestUser {
         return this;
     }
 
-    // Getters
     public String getUsername() {
         return username;
     }

@@ -23,8 +23,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    # 3. Download dependencies and run the TestNG automation suite
+    # 3. Securely pass credentials and run the TestNG automation suite
     - name: Execute API Tests via Maven
+      env:
+        # This maps precisely to your ConfigReader's cascading lookup (TEST_PASSWORD)
+        # Store your actual password in your GitHub Repository settings under Secrets -> Actions
+        TEST_PASSWORD: ${{ secrets.API_TEST_PASSWORD || 'NoLombok123' }}
+        BASE_URL: https://api.realworld.show
       run: mvn clean test
 
     # 4. Save and export the HTML reports before the container is wiped out
@@ -33,5 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: testng-execution-reports
-        path: target/surefire-reports/
+        path: |
+          target/surefire-reports/
+          test-output/
         retention-days: 5

@@ -22,3 +22,16 @@ Thumbs.db
 
 # Test execution reports
 test-output/
+surefire-reports/
+
+# ==========================================
+# 🔐 ENTERPRISE SECURITY & LOCAL ISOLATION
+# ==========================================
+
+# Block local environment files containing real passwords
+.env
+*.env
+
+# Block any local properties overrides or user-specific configs
+*.local.properties
+src/test/resources/*.local.properties

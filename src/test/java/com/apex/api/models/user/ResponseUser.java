@@ -1,5 +1,8 @@
 package com.apex.api.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResponseUser {
     private String email;
     private String token;
@@ -7,11 +10,8 @@ public class ResponseUser {
     private String bio;
     private String image;
 
-    // Required No-Args Constructor
-    public ResponseUser() {
-    }
+    public ResponseUser() {}
 
-    // Fluent Setters
     public ResponseUser setEmail(String email) {
         this.email = email;
         return this;
@@ -33,7 +33,6 @@ public class ResponseUser {
         return this;
     }
 
-    // Getters
     public String getEmail() {
         return email;
     }

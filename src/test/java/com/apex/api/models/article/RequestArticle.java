@@ -3,16 +3,13 @@ package com.apex.api.models.article;
 import java.util.List;
 
 public class RequestArticle {
-    String title;
-    String description;
-    String body;
-    List<String> tagList;
+    private String title;
+    private String description;
+    private String body;
+    private List<String> tagList;
 
-    // Required No-Args Constructor
-    public RequestArticle() {
-    }
+    public RequestArticle() {}
 
-    // Fluent Setters
     public RequestArticle setTitle(String title) {
         this.title = title;
         return this;
@@ -33,7 +30,6 @@ public class RequestArticle {
         return this;
     }
 
-    // Getters
     public String getTitle() {
         return title;
     }

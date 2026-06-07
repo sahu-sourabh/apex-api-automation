@@ -8,21 +8,27 @@ public class ConfigReader {
     private static Properties properties;
 
     static {
-        try {
-            // Locate the properties configuration file
-            String filePath = "src/test/resources/config.properties";
-            FileInputStream inputStream = new FileInputStream(filePath);
-
-            // Load the file data into the Properties object
+        // Try-with-resources ensures the file stream is safely closed automatically
+        try (FileInputStream inputStream = new FileInputStream("src/test/resources/config.properties")) {
             properties = new Properties();
             properties.load(inputStream);
-            inputStream.close();
         } catch (IOException e) {
-            throw new RuntimeException("Critical Error: Could not load config.properties file! " + e.getMessage());
+            throw new RuntimeException("CRITICAL: Failed to load config.properties file configuration.", e);
         }
     }
 
+    /**
+     * Enterprise Cascading Lookup: Checks Environment variables first, falls back to property file.
+     * Example: "base.url" checks for environment variable "BASE_URL" first.
+     */
     public static String getProperty(String key) {
+        String envKey = key.toUpperCase().replace(".", "_");
+        String envValue = System.getenv(envKey);
+
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue;
+        }
+
         return properties.getProperty(key);
     }
 }
